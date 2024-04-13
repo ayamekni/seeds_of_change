@@ -12,4 +12,10 @@ class Event extends Model
         'title', 'date', 'location', 'description',
         // Add more attributes here if needed
     ];
+
+    
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

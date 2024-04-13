@@ -13,6 +13,7 @@
                     <th>Date</th>
                     <th>Location</th>
                     <th>Description</th>
+                    <th>Created by</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -23,6 +24,7 @@
                     <td>{{ $event->date }}</td>
                     <td>{{ $event->location }}</td>
                     <td>{{ $event->description }}</td>
+                    <td>{{ $event->createdByUser->name }}</td>
                     <td>
                         <div class="btn-group" role="group">
                             <a href="{{ route('events.edit', $event->id) }}" class="btn btn-primary">Update</a>

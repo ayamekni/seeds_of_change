@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use Illuminate\Support\Facades\Auth;
+
   
     class EventController extends Controller
     {
@@ -35,6 +37,7 @@ use App\Models\Event;
         $event->date = $validatedData['date'];
         $event->location = $validatedData['location'];
         $event->description = $validatedData['description'];
+        $event->created_by = Auth::id(); // Set the created_by column to the ID of the authenticated user
     
         // Save the event to the database
         $event->save();
@@ -77,6 +80,15 @@ use App\Models\Event;
     $event = Event::findOrFail($id);
     return view('updateEvent', compact('event'));
 }
+public function index()
+{
+    // Retrieve all events along with the user who created each event
+    $events = Event::with('createdByUser')->get();
+    
+    // Pass the retrieved events to the view
+    return view('events.index', ['events' => $events]);
+}
+
 }
 
 
