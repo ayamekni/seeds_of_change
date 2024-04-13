@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Auth;
         $event->date = $validatedData['date'];
         $event->location = $validatedData['location'];
         $event->description = $validatedData['description'];
-        $event->created_by = Auth::id(); // Set the created_by column to the ID of the authenticated user
+        $event->created_by = 1; # Auth::id(); // Set the created_by column to the ID of the authenticated user
     
         // Save the event to the database
         $event->save();
