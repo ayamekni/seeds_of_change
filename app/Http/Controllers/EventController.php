@@ -14,12 +14,29 @@ use Illuminate\Support\Facades\Auth;
             return view('createEvent');
         }
     
-        public function showEvents()
+        // public function showEvents()
+        // {
+        //     $events = Event::all();
+        //     return view('events', compact('events'));
+        // }
+        public function manage()
         {
-            $events = Event::all();
-            return view('events', compact('events'));
+            // Retrieve all events along with the user who created each event
+            // $events = Event::where('created_by', Auth::id())->get();
+            $events = Event::where('created_by', 1)->get();
+            // Pass the retrieved events to the view
+            return view('ManageEvents', ['events' => $events]);
         }
-
+        
+        public function browse()
+        {
+            // Retrieve all events along with the user who created each event
+            $events = Event::with(['createdByUser','registrations'])->get();
+            return view('browseEvents', compact('events'));
+        }
+        
+        
+        
 
     public function store(Request $request)
     {
@@ -37,21 +54,15 @@ use Illuminate\Support\Facades\Auth;
         $event->date = $validatedData['date'];
         $event->location = $validatedData['location'];
         $event->description = $validatedData['description'];
-        $event->created_by = 1; # Auth::id(); // Set the created_by column to the ID of the authenticated user
+        // $event->created_by = Auth::id(); // Set the created_by column to the ID of the authenticated user
+        $event->created_by = 1; // Manually set the authenticated user ID for testing
     
         // Save the event to the database
         $event->save();
     
         // Redirect back to the form with a success message
-        return redirect()->route('events.index')->with('success', 'Event created successfully!');
+        return redirect()->route('events.manage')->with('success', 'Event created successfully!');
     }
-
-    // public function edit(Event $event)
-    // {
-    //     // Retrieve the event from the database and pass it to the view
-    //     $event=Event::find($event);
-    //     return view('updateEvent', compact('event'));
-    // }
 
     public function update(Request $request, Event $event)
     {
@@ -64,14 +75,14 @@ use Illuminate\Support\Facades\Auth;
 
         $event->update($validatedData);
 
-        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+        return redirect()->route('events.manage')->with('success', 'Event updated successfully!');
     }
 
     public function destroy(Event $event)
     {
         $event->delete();
 
-        return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
+        return redirect()->route('events.manage')->with('success', 'Event deleted successfully!');
     }
 
 
@@ -79,14 +90,6 @@ use Illuminate\Support\Facades\Auth;
 {
     $event = Event::findOrFail($id);
     return view('updateEvent', compact('event'));
-}
-public function index()
-{
-    // Retrieve all events along with the user who created each event
-    $events = Event::with('createdByUser')->get();
-    
-    // Pass the retrieved events to the view
-    return view('events.index', ['events' => $events]);
 }
 
 }

@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="mt-3">
-                <a href="{{ route('events.index') }}" class="btn btn-secondary">View Events</a>
+                <a href="{{ route('events.manage') }}" class="btn btn-secondary">View Events</a>
             </div>
         </div>
     </div>
