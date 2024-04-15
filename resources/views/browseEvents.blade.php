@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($events as $event)
+            @foreach ($events as $event)
                 <tr>
                     <td>{{ $event->title }}</td>
                     <td>{{ $event->date }}</td>
@@ -31,6 +31,10 @@
                     <td>{{ $event->createdByUser->name }}</td>
                     <td>{{ $event->registrations->count()}}</td>
                     <td>
+                    @if ($event->isOver())
+                       <span class="badge badge-danger">Overdue</span>
+                    @else
+
                         <div class="btn-group" role="group">
                             @php
                                 $registration = \App\Models\Registration::where('event_id', $event->id)
@@ -50,11 +54,20 @@
                                 </form>
                             @endif
                         </div>
+                    @endif    
                     </td>
                 </tr>
-                @endforeach
+            @endforeach
             </tbody>
         </table>
     @endif
+    <div>
+    <ul class="pagination">
+                {{ $events->links("pagination::bootstrap-4") }}
+    </ul>
+    </div>
+
 </div>
+
+
 @endsection

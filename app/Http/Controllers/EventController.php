@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Auth;
         public function browse()
         {
             // Retrieve all events along with the user who created each event
-            $events = Event::with(['createdByUser','registrations'])->get();
+            $events = Event::with(['createdByUser','registrations'])->paginate(5);
             return view('browseEvents', compact('events'));
         }
         
@@ -92,8 +92,7 @@ use Illuminate\Support\Facades\Auth;
     return view('updateEvent', compact('event'));
 }
 
-}
-
+    }
 
 
 

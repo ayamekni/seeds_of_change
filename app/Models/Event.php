@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Event extends Model
 {
@@ -23,4 +24,20 @@ class Event extends Model
     {
         return $this->hasMany(Registration::class);
     }
+
+
+
+    public function isOver()
+    {
+        // Get the current date
+        $now = Carbon::now();
+        
+        // Convert the event date to a Carbon instance
+        $eventDate = Carbon::createFromFormat('Y-m-d', $this->date);
+
+        // Check if the event date is in the past
+        return $eventDate->isPast();
+    }
+
+
 }
