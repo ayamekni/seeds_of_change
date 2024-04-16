@@ -28,14 +28,33 @@ use Illuminate\Support\Facades\Auth;
             return view('ManageEvents', ['events' => $events]);
         }
         
-        public function browse()
-        {
-            // Retrieve all events along with the user who created each event
-            $events = Event::with(['createdByUser','registrations'])->paginate(5);
-            return view('browseEvents', compact('events'));
+       
+       
+        public function browse(Request $request)
+{
+    // Log the request data for debugging
+    logger()->debug('Browse Events Request:', $request->all());
+
+    // Retrieve all events along with the user who created each event
+    $query = Event::with(['createdByUser', 'registrations']);
+
+    if ($request->has('location')) {
+        $location = $request->input('location');
+        logger()->debug('Filtering events by location:', ['location' => $location]);
+        if ($location !== 'all') {
+            $query->where('location', $location);
         }
-        
-        
+    }
+
+    // Paginate the results
+    $events = $query->paginate(5);
+
+    // Retrieve unique locations
+    $uniqueLocations = $this->getUniqueLocations();
+
+    return view('browseEvents', compact('events', 'uniqueLocations'));
+}
+
         
 
     public function store(Request $request)
@@ -91,8 +110,16 @@ use Illuminate\Support\Facades\Auth;
     $event = Event::findOrFail($id);
     return view('updateEvent', compact('event'));
 }
+public function getUniqueLocations()
+{
+    $uniqueLocations = Event::distinct()->pluck('location');
+    return $uniqueLocations;
+}
 
-    }
+
+
+
+}
 
 
 

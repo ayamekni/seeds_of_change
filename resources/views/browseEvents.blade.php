@@ -9,6 +9,22 @@
     @if ($events->isEmpty())
         <p>No events found.</p>
     @else
+    <form action="{{ route('events.browse') }}" method="GET">
+    <div class="form-group">
+        <label for="location">Select Location:</label>
+        <select class="form-control" id="location" name="location">
+            <option value="all">All Locations</option>
+            @foreach ($uniqueLocations as $location)
+                <option value="{{ $location }}">{{ $location }}</option>
+            @endforeach
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+
+
+
         <table class="table">
             <thead>
                 <tr>
@@ -68,6 +84,22 @@
     </div>
 
 </div>
+<script>
+    $(document).ready(function() {
+        $('.dropdown-item').click(function() {
+            var selectedLocation = $(this).data('location');
+            $('.event-card').each(function() {
+                var eventLocation = $(this).data('location');
+                if (eventLocation === selectedLocation || selectedLocation === 'All') {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>
+
 
 
 @endsection
